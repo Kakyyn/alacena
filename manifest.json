@@ -1,0 +1,61 @@
+{
+  "name": "Alacena - Gestión de Inventario",
+  "short_name": "Alacena",
+  "description": "Aplicación para gestionar el inventario de tu alacena con sincronización en Google Sheets",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1a1a2e",
+  "theme_color": "#2196f3",
+  "scope": "./",
+  "lang": "es",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMyMTk2RjMiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnpNOSAxN0g3di03aDJ2N3ptNCAwSDEwVjdoM3Y2aC0yczJ2NHptNCAwSDEyVjJoNHYxNXoiLz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMyMTk2RjMiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJNMTkgM0g1Yy0xLjEgMC0yIC45LTIgMnYxNGMwIDEuMS45IDIgMiAyaDE0YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6TTkgMTdIN3YtN2gydjd6bTQgMEgxMFY3aDN2NmgtMnMydjR6bTQgMEgxMlYyaDR2MTV6Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTQwIiBoZWlnaHQ9Ijk2MCIgdmlld0JveD0iMCAwIDU0MCA5NjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1NDAiIGhlaWdodD0iOTYwIiBmaWxsPSIjMWExYTJlIi8+CjxyZWN0IHg9IjIwIiB5PSI2MCIgd2lkdGg9IjUwMCIgaGVpZ2h0PSI4MCIgcng9IjEyIiBmaWxsPSIjMmQyZDQ0Ii8+Cjx0ZXh0IHg9IjI3MCIgeT0iMTEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMjE5NmYzIiBmb250LXNpemU9IjI0IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+QWxhY2VuYSBJbnZlbnRhcmlvPC90ZXh0Pgo8L3N2Zz4K",
+      "sizes": "540x960",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Agregar Producto",
+      "short_name": "Agregar",
+      "description": "Agregar nuevo producto al inventario",
+      "url": "./index.html#agregar",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzIxOTZmMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDEzSDEzVjE5SDExVjEzSDVWMTFIMTFWNUgxM1YxMUgxOVYxM1oiLz4KPC9zdmc+Cg==",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Ver Google Sheets",
+      "short_name": "Sheets",
+      "description": "Abrir la hoja de Google Sheets",
+      "url": "./index.html#sheets",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzRjYWY1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDNINWMtMS4xIDAtMiAuOS0yIDJ2MTRjMCAxLjEuOSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY1YzAtMS4xLS45LTItMi0yek05IDE3SDd2LTdoMnY3em00IDBIMTBWN2gzdjZoLTJzMnY0em00IDBIMTJWMmg0djE1eiIvPgo8L3N2Zz4K",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

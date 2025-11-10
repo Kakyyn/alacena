@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aplicación para gestionar el inventario de tu alacena con sincronización en Google Sheets">
+<meta name="theme-color" content="#2196f3">
+<title>Alacena - Gestión de Inventario</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="./manifest.json">
+
+<!-- PWA Meta Tags -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Alacena">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="msapplication-navbutton-color" content="#2196f3">
+
+<!-- PWA Icons -->
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMjQiIGZpbGw9IiMyMTk2RjMiLz4KPHN2ZyB4PSI0NSIgeT0iNDUiIHdpZHRoPSI5MCIgaGVpZ2h0PSI5MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnpNOSAxN0g3di03aDJ2N3ptNCAwSDEwVjdoM3Y2aC0yczJ2NHptNCAwSDEyVjJoNHYxNXoiLz4KPC9zdmc+Cjwvc3ZnPgo=">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzIxOTZGMyIvPgo8c3ZnIHg9IjgiIHk9IjgiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnpNOSAxN0g3di03aDJ2N3ptNCAwSDEwVjdoM3Y2aC0yczJ2NHptNCAwSDEyVjJoNHYxNXoiLz4KPC9zdmc+Cjwvc3ZnPgo=">
+<style>
+  /* Variables CSS para consistencia */
+  :root {
+    --primary-color: #2196f3;
+    --primary-dark: #1976d2;
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-card: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --border-color: #404040;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --radius: 12px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1a2e 100%);
+    color: var(--text-primary);
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .header h1 {
+    font-size: clamp(24px, 5vw, 36px);
+    margin: 0 0 20px 0;
+    background: linear-gradient(45deg, var(--primary-color), var(--success-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Container principal */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Botones de acción */
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    min-width: 140px;
+    justify-content: center;
+    box-shadow: var(--shadow);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .btn-primary { background: var(--primary-color); color: white; }
+  .btn-success { background: var(--success-color); color: white; }
+  .btn-warning { background: var(--warning-color); color: white; }
+  .btn-danger { background: var(--danger-color); color: white; }
+  .btn-secondary { background: var(--bg-card); color: var(--text-primary); }
+
+  .btn:hover.btn-primary { background: var(--primary-dark); }
+  .btn:hover.btn-success { background: #45a049; }
+  .btn:hover.btn-warning { background: #e68900; }
+  .btn:hover.btn-danger { background: #da190b; }
+
+  /* Formulario */
+  .form-container {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+  }
+
+  .form-container h3 {
+    margin: 0 0 20px 0;
+    color: var(--primary-color);
+    font-size: 20px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    align-items: end;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .form-control {
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+  }
+
+  .form-control::placeholder {
+    color: var(--text-secondary);
+  }
+
+  /* Botones del formulario */
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: 14px;
+    min-width: 100px;
+  }
+
+  /* Tabla responsive */
+  .table-container {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling en iOS */
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    min-width: 100%; /* Asegurar que no sea más pequeña que el contenedor */
+    table-layout: auto;
+  }
+
+  th, td {
+    padding: 16px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  th {
+    background: var(--bg-secondary);
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    vertical-align: middle;
+    height: 50px;
+    line-height: 1.2;
+  }
+
+  td {
+    color: var(--text-primary);
+  }
+
+  tr:hover td {
+    background: rgba(33, 150, 243, 0.1);
+  }
+
+  /* Botones de acción en tabla */
+  .table-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .table-actions .btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-width: 70px;
+    box-shadow: none;
+  }
+
+  /* Estilos específicos para móvil */
+  @media screen and (max-width: 767px) {
+    .table-container {
+      overflow-x: hidden; /* Evitar scroll horizontal */
+    }
+
+    table {
+      table-layout: fixed; /* Forzar ancho fijo de columnas */
+      width: 100%;
+    }
+
+    /* Headers más compactos en móvil */
+    th {
+      font-size: 10px;
+      padding: 8px 2px;
+      height: auto;
+      line-height: 1.1;
+      white-space: normal;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    /* Distribución de ancho de columnas en móvil */
+    th:nth-child(1), td:nth-child(1) { width: 35%; } /* Producto */
+    th:nth-child(2), td:nth-child(2) { width: 12%; } /* Cantidad */
+    th:nth-child(3), td:nth-child(3) { width: 38%; } /* Fecha */
+    th:nth-child(4), td:nth-child(4) { width: 15%; } /* Acciones */
+
+    /* Asegurar que el texto se ajuste */
+    td {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+  }
+
+  /* Mensajes de estado */
+  .status-message {
+    padding: 16px;
+    border-radius: var(--radius);
+    margin: 20px 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Input de fecha personalizado */
+  input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  input[type="date"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+  }
+
+  /* Webkit date picker styling */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%234A5568'%3e%3cpath fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/%3e%3c/svg%3e") no-repeat center;
+    background-size: 20px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-left: 8px;
+    opacity: 0.7;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    body {
+      padding: 15px;
+    }
+
+    .action-buttons {
+      justify-content: stretch;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: auto;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    th, td {
+      padding: 12px 8px;
+      font-size: 14px;
+    }
+
+    /* Hacer la columna de acciones más estrecha */
+    th:last-child, td:last-child {
+      width: 90px;
+      padding: 8px 4px;
+    }
+
+    .table-actions {
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .table-actions .btn {
+      width: 100%;
+      min-width: auto;
+      padding: 6px 4px;
+      font-size: 11px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header h1 {
+      font-size: 24px;
+    }
+
+    .form-container {
+      padding: 20px 15px;
+    }
+
+    th, td {
+      padding: 10px 6px;
+      font-size: 13px;
+    }
+
+    /* Columna de acciones aún más estrecha */
+    th:last-child, td:last-child {
+      width: 80px;
+      padding: 6px 2px;
+    }
+
+    .table-actions {
+      flex-direction: column;
+      gap: 2px;
+      width: 100%;
+    }
+
+    .table-actions .btn {
+      width: 100%;
+      min-width: auto;
+      padding: 4px 2px;
+      font-size: 10px;
+      white-space: nowrap;
+      text-align: center;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+  }
+
+  /* Para pantallas muy pequeñas */
+  @media (max-width: 360px) {
+    .table-container {
+      margin: 0 -15px;
+      border-radius: 0;
+    }
+
+    th, td {
+      padding: 8px 4px;
+      font-size: 12px;
+    }
+
+    th:last-child, td:last-child {
+      width: 70px;
+      padding: 4px 1px;
+    }
+
+    .table-actions .btn {
+      padding: 3px 1px;
+      font-size: 9px;
+      line-height: 1.2;
+    }
+
+    /* Hacer que otras columnas se ajusten mejor */
+    th:first-child, td:first-child {
+      max-width: 120px;
+    }
+    th:nth-child(2), td:nth-child(2) {
+      max-width: 60px;
+    }
+    th:nth-child(3), td:nth-child(3) {
+      max-width: 100px;
+    }
+  }
+
+  /* Animaciones */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-container {
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* Estados de carga */
+  .loading {
+    background: #5a4a2d !important;
+    color: #ffd93d;
+  }
+
+  .success {
+    background: #2d5a2d !important;
+    color: #90ee90;
+  }
+
+  .error {
+    background: #5a2d2d !important;
+    color: #ff6b6b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header">
+    <h1>🍗 Inventario de la Alacena</h1>
+    
+    <div class="action-buttons">
+      <button onclick="location.reload()" class="btn btn-success">
+        <span>🔄</span> Actualizar
+      </button>
+      <button onclick="agregarItem()" class="btn btn-primary">
+        <span>➕</span> Agregar Item
+      </button>
+      <button onclick="openSheet()" class="btn btn-secondary">
+        <span>📊</span> Abrir Hoja
+      </button>
+    </div>
+  </header>
+
+  <!-- Formulario para agregar/editar items -->
+  <div id="formulario" class="form-container" style="display: none;">
+    <h3 id="tituloFormulario">Agregar Nuevo Item</h3>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="producto">Producto</label>
+        <input type="text" id="producto" class="form-control" placeholder="Nombre del producto" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="cantidad">Cantidad</label>
+        <input type="text" id="cantidad" class="form-control" placeholder="Ej: 2 kg, 5 unidades">
+      </div>
+      
+      <div class="form-group">
+        <label for="fecha">Fecha</label>
+        <input type="date" id="fecha" class="form-control" required>
+      </div>
+      
+      <div class="form-group form-actions">
+        <button onclick="guardarItem()" class="btn btn-success btn-sm">
+          <span>💾</span> Guardar
+        </button>
+        <button onclick="cancelarEdicion()" class="btn btn-secondary btn-sm">
+          <span>❌</span> Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IFRAME INVISIBLE PARA ENVÍO SIN CORS -->
+  <iframe id="hiddenFrame" name="hiddenFrame" style="display: none;"></iframe>
+  <form id="hiddenForm" target="hiddenFrame" method="POST" style="display: none;">
+    <input type="hidden" name="data" id="hiddenData">
+  </form>
+
+  <!-- Tabla de inventario -->
+  <div class="table-container">
+    <div class="table-responsive">
+      <table id="tabla">
+        <thead>
+          <tr>
+            <th id="header-producto">Producto</th>
+            <th id="header-cantidad">Cantidad</th>
+            <th id="header-fecha">Última actualización</th>
+            <th id="header-acciones">Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const SHEET_ID = "1j8BgC-KV_lQPovKuzfn76QDmJyUd1Pz952E1u93eHV8";
+const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+// REEMPLAZA ESTA URL CON LA URL DE TU GOOGLE APPS SCRIPT DESPLEGADO
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybILyTFjEc99lHfjpZTRikfteWXstErIxeJpohj3xlzIzyqCmWp9LnT8nyKNXFLJKGdA/exec";
+
+// Registrar Service Worker para PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(registration) {
+        console.log('Service Worker registrado exitosamente:', registration.scope);
+        
+        // Verificar si hay actualizaciones
+        registration.addEventListener('updatefound', function() {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', function() {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // Nueva versión disponible
+              if (confirm('Nueva versión disponible. ¿Actualizar la aplicación?')) {
+                newWorker.postMessage({type: 'SKIP_WAITING'});
+                window.location.reload();
+              }
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.log('Error al registrar Service Worker:', error);
+      });
+  });
+}
+
+// Detectar instalación PWA
+window.addEventListener('beforeinstallprompt', function(event) {
+  event.preventDefault();
+  window.deferredPrompt = event;
+  
+  // Mostrar botón de instalación (opcional)
+  console.log('PWA lista para instalar');
+});
+
+// Detectar cuando la app fue instalada
+window.addEventListener('appinstalled', function(event) {
+  console.log('PWA instalada exitosamente');
+  window.deferredPrompt = null;
+});
+
+// Función para actualizar headers según el tamaño de pantalla
+function updateTableHeaders() {
+  const isMobile = window.innerWidth <= 767;
+  
+  if (isMobile) {
+    document.getElementById('header-producto').textContent = 'Producto';
+    document.getElementById('header-cantidad').textContent = 'Cant.';
+    document.getElementById('header-fecha').textContent = 'Fecha';
+    document.getElementById('header-acciones').textContent = 'Acción';
+  } else {
+    document.getElementById('header-producto').textContent = 'Producto';
+    document.getElementById('header-cantidad').textContent = 'Cantidad';
+    document.getElementById('header-fecha').textContent = 'Última actualización';
+    document.getElementById('header-acciones').textContent = 'Acciones';
+  }
+}
+
+// Llamar la función al cargar y al redimensionar
+window.addEventListener('load', updateTableHeaders);
+window.addEventListener('resize', updateTableHeaders);
+
+let currentData = []; // Almacenar los datos actuales
+let editingIndex = -1; // Índice del item que se está editando (-1 = agregar nuevo)
+
+// Función para formatear fechas consistentemente
+function formatearFecha(fecha) {
+  if (!fecha) {
+    return new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD para input date
+  }
+  
+  try {
+    let dateObj;
+    
+    // Si ya está en formato ISO (YYYY-MM-DD), devolverla tal como está
+    if (typeof fecha === 'string' && fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      return fecha;
+    }
+    
+    // Si es formato español (dd/mm/yyyy), convertir a ISO
+    if (typeof fecha === 'string' && fecha.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
+      const [day, month, year] = fecha.split('/');
+      dateObj = new Date(year, month - 1, day);
+    }
+    // Si es una fecha de Google Sheets o cualquier otro formato
+    else if (fecha instanceof Date) {
+      dateObj = fecha;
+    } else if (typeof fecha === 'string') {
+      dateObj = new Date(fecha);
+    } else {
+      dateObj = new Date();
+    }
+    
+    // Verificar que la fecha es válida
+    if (isNaN(dateObj.getTime())) {
+      return new Date().toISOString().split('T')[0];
+    }
+    
+    // Convertir a formato ISO (YYYY-MM-DD) para el input date
+    return dateObj.toISOString().split('T')[0];
+    
+  } catch (error) {
+    console.log('Error formateando fecha:', error);
+    return new Date().toISOString().split('T')[0];
+  }
+}
+
+// Función para convertir fecha a formato bonito en español
+function formatearFechaBonita(fecha) {
+  if (!fecha) return '';
+  
+  const months = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+  ];
+  
+  try {
+    let dateObj;
+    let day, month, year;
+    
+    // Si viene en formato Date(2025,10,10) de Google Sheets
+    if (typeof fecha === 'string' && fecha.includes('Date(')) {
+      const match = fecha.match(/Date\((\d+),(\d+),(\d+)\)/);
+      if (match) {
+        year = parseInt(match[1]);
+        month = parseInt(match[2]); // En Date() el mes ya viene 0-indexado
+        day = parseInt(match[3]);
+        return `${day} de ${months[month]} ${year}`;
+      }
+    }
+    
+    // Si es formato ISO (YYYY-MM-DD)
+    if (typeof fecha === 'string' && fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      dateObj = new Date(fecha + 'T00:00:00');
+    }
+    // Si es formato español (dd/mm/yyyy)
+    else if (typeof fecha === 'string' && fecha.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
+      const parts = fecha.split('/');
+      day = parseInt(parts[0]);
+      month = parseInt(parts[1]) - 1; // Los meses son 0-indexados en JavaScript
+      year = parseInt(parts[2]);
+      return `${day} de ${months[month]} ${year}`;
+    }
+    // Si es objeto Date
+    else if (fecha instanceof Date) {
+      dateObj = fecha;
+    }
+    // Otros formatos de string
+    else if (typeof fecha === 'string') {
+      dateObj = new Date(fecha);
+    }
+    else {
+      return fecha; // Si no se puede procesar, devolver tal como viene
+    }
+    
+    // Si se creó un objeto Date, extraer los valores
+    if (dateObj && !isNaN(dateObj.getTime())) {
+      day = dateObj.getDate();
+      month = dateObj.getMonth(); // Ya viene 0-indexado
+      year = dateObj.getFullYear();
+      return `${day} de ${months[month]} ${year}`;
+    }
+    
+    return fecha; // Devolver tal como viene si no se puede parsear
+    
+  } catch (error) {
+    console.log('Error formateando fecha bonita:', error);
+    return fecha;
+  }
+}
+
+// Función para convertir de ISO a formato español para mostrar en la tabla
+function formatearFechaParaMostrar(fecha) {
+  // Usar el formato bonito para mostrar las fechas
+  return formatearFechaBonita(fecha);
+}
+
+function openSheet() {
+  window.open(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`, '_blank');
+}
+
+function agregarItem() {
+  editingIndex = -1;
+  document.getElementById('tituloFormulario').textContent = 'Agregar Nuevo Item';
+  document.getElementById('producto').value = '';
+  document.getElementById('cantidad').value = '';
+  document.getElementById('fecha').value = formatearFecha(); // Usar función de formateo
+  document.getElementById('formulario').style.display = 'block';
+}
+
+function editarItem(index) {
+  editingIndex = index;
+  const row = currentData[index];
+  document.getElementById('tituloFormulario').textContent = 'Editar Item';
+  document.getElementById('producto').value = row[0] || '';
+  document.getElementById('cantidad').value = row[1] || '';
+  document.getElementById('fecha').value = formatearFecha(row[2]); // Usar función de formateo
+  
+  // Guardar el nombre original para identificación
+  document.getElementById('formulario').setAttribute('data-original-name', row[0] || '');
+  document.getElementById('formulario').style.display = 'block';
+}
+
+function cancelarEdicion() {
+  document.getElementById('formulario').style.display = 'none';
+  editingIndex = -1;
+}
+
+function guardarItem() {
+  const producto = document.getElementById('producto').value.trim();
+  const cantidad = document.getElementById('cantidad').value.trim();
+  const fechaInput = document.getElementById('fecha').value; // Ya está en formato YYYY-MM-DD
+  
+  // Convertir fecha ISO a formato español para Google Sheets
+  const fecha = formatearFechaParaMostrar(fechaInput);
+  
+  if (!producto) {
+    mostrarMensaje('⚠️ El nombre del producto es obligatorio', 'error');
+    return;
+  }
+  
+  console.log('Datos a guardar:', { producto, cantidad, fecha: fecha, fechaISO: fechaInput });
+  
+  // Verificar si Apps Script está configurado
+  if (APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL_AQUI") {
+    mostrarMensaje('⚠️ Para editar Google Sheets directamente, necesitas configurar Google Apps Script. Ve al archivo google-apps-script.js para las instrucciones.', 'error');
+    return;
+  }
+  
+  mostrarMensaje('🔄 Guardando cambios en Google Sheets...', 'loading');
+  
+  // Preparar datos
+  let data;
+  
+  if (editingIndex === -1) {
+    // AGREGAR nuevo item
+    data = {
+      action: 'add',
+      producto: producto,
+      cantidad: cantidad,
+      fecha: fecha
+    };
+  } else {
+    // EDITAR item existente - usar nombre original para identificación
+    const originalName = document.getElementById('formulario').getAttribute('data-original-name');
+    data = {
+      action: 'edit',
+      producto: producto,
+      cantidad: cantidad,
+      fecha: fecha,
+      originalName: originalName // Para identificar qué fila editar
+    };
+  }
+  
+  console.log('Enviando datos via iframe:', data);
+  
+  // Configurar el iframe para detectar cuando termine
+  const iframe = document.getElementById('hiddenFrame');
+  const form = document.getElementById('hiddenForm');
+  const hiddenData = document.getElementById('hiddenData');
+  
+  // Configurar formulario
+  form.action = APPS_SCRIPT_URL;
+  hiddenData.value = JSON.stringify(data);
+  
+  // Manejar respuesta del iframe
+  iframe.onload = function() {
+    try {
+      setTimeout(() => {
+        const message = editingIndex === -1 ? 
+          `✅ "${producto}" agregado a Google Sheets` : 
+          `✅ "${producto}" actualizado en Google Sheets`;
+        mostrarMensaje(message, 'success');
+        setTimeout(() => location.reload(), 1500);
+      }, 2000);
+    } catch (error) {
+      console.log('Iframe loaded, assuming success');
+      const message = editingIndex === -1 ? 
+        `✅ "${producto}" agregado a Google Sheets` : 
+        `✅ "${producto}" actualizado en Google Sheets`;
+      mostrarMensaje(message, 'success');
+      setTimeout(() => location.reload(), 1500);
+    }
+  };
+  
+  // Enviar formulario
+  form.submit();
+  cancelarEdicion();
+}
+
+function eliminarItem(index) {
+  const row = currentData[index];
+  if (!confirm(`¿Estás seguro de que quieres eliminar "${row[0]}"?`)) {
+    return;
+  }
+  
+  // Verificar si Apps Script está configurado
+  if (APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL_AQUI") {
+    alert('⚠️ Para editar Google Sheets directamente, necesitas configurar Google Apps Script.\n\nVe al archivo google-apps-script.js para las instrucciones.');
+    return;
+  }
+  
+  mostrarMensaje('🔄 Eliminando item de Google Sheets...', 'loading');
+  
+  // CORRIGIENDO EL PROBLEMA: Usar número de fila real de Google Sheets
+  // En Google Sheets, las filas empiezan en 1, no en 0
+  // Y necesitamos el número de fila actual, no el índice original
+  const googleSheetsRowNumber = index + 1;
+  
+  const data = {
+    action: 'delete',
+    rowIndex: index, // Mantenemos el índice original para referencia
+    googleRowNumber: googleSheetsRowNumber, // Agregamos el número real de fila
+    itemName: row[0] // Agregamos el nombre para verificación
+  };
+  
+  console.log('Eliminando via iframe:', data);
+  console.log(`Eliminando índice ${index} que corresponde a la fila ${googleSheetsRowNumber} en Google Sheets`);
+  
+  // Configurar el iframe para detectar cuando termine
+  const iframe = document.getElementById('hiddenFrame');
+  const form = document.getElementById('hiddenForm');
+  const hiddenData = document.getElementById('hiddenData');
+  
+  // Configurar formulario
+  form.action = APPS_SCRIPT_URL;
+  hiddenData.value = JSON.stringify(data);
+  
+  // Manejar respuesta del iframe
+  iframe.onload = function() {
+    try {
+      setTimeout(() => {
+        mostrarMensaje(`✅ "${row[0]}" eliminado de Google Sheets`, 'success');
+        setTimeout(() => location.reload(), 1500);
+      }, 2000);
+    } catch (error) {
+      console.log('Iframe loaded, assuming success');
+      mostrarMensaje(`✅ "${row[0]}" eliminado de Google Sheets`, 'success');
+      setTimeout(() => location.reload(), 1500);
+    }
+  };
+  
+  // Enviar formulario
+  form.submit();
+}
+
+function mostrarMensaje(texto, tipo) {
+  // Remover mensaje anterior
+  const existingStatus = document.querySelector('.status-message');
+  if (existingStatus) existingStatus.remove();
+  
+  const statusDiv = document.createElement("div");
+  statusDiv.className = `status-message ${tipo}`;
+  
+  // Agregar iconos según el tipo
+  let icono = '';
+  switch(tipo) {
+    case 'loading': icono = '🔄'; break;
+    case 'success': icono = '✅'; break;
+    case 'error': icono = '❌'; break;
+    default: icono = '💡';
+  }
+  
+  statusDiv.innerHTML = `<span>${icono}</span> ${texto}`;
+  
+  // Insertar después del header
+  const container = document.querySelector('.container');
+  const header = container.querySelector('.header');
+  header.insertAdjacentElement('afterend', statusDiv);
+  
+  // Auto-ocultar mensajes de éxito después de 5 segundos
+  if (tipo === 'success') {
+    setTimeout(() => {
+      if (statusDiv.parentNode) {
+        statusDiv.remove();
+      }
+    }, 5000);
+  }
+  
+  return statusDiv;
+}
+
+function actualizarTabla() {
+  const tbody = document.querySelector("#tabla tbody");
+  tbody.innerHTML = "";
+  
+  currentData.forEach((row, index) => {
+    const tr = document.createElement("tr");
+    tr.setAttribute('data-row-index', index);
+    
+    // Agregar las 3 columnas de datos con formateo especial para la fecha
+    row.slice(0, 3).forEach((cell, cellIndex) => {
+      const td = document.createElement("td");
+      
+      if (cellIndex === 2) {
+        // Es la columna de fecha (índice 2), formatearla para mostrar
+        td.textContent = formatearFechaParaMostrar(cell);
+      } else {
+        td.textContent = cell || "";
+      }
+      
+      tr.appendChild(td);
+    });
+    
+    // Agregar columna de acciones con nuevos estilos
+    const actionsTd = document.createElement("td");
+    actionsTd.innerHTML = `
+      <div class="table-actions">
+        <button onclick="editarItem(${index})" class="btn btn-warning btn-sm">
+          <span>✏️</span> Editar
+        </button>
+        <button onclick="eliminarItem(${index})" class="btn btn-danger btn-sm">
+          <span>🗑️</span> Borrar
+        </button>
+      </div>
+    `;
+    tr.appendChild(actionsTd);
+    
+    tbody.appendChild(tr);
+  });
+}
+
+console.log("Iniciando carga de datos desde:", URL);
+
+fetch(URL)
+  .then(res => {
+    console.log("Respuesta recibida, status:", res.status);
+    return res.text();
+  })
+  .then(text => {
+    console.log("Datos cargados desde Google Sheets");
+    
+    // More robust JSON extraction
+    let jsonText;
+    if (text.startsWith('/*O_o*/\ngoogle.visualization.Query.setResponse(')) {
+      const start = text.indexOf('(') + 1;
+      const end = text.lastIndexOf(')');
+      jsonText = text.substring(start, end);
+    } else {
+      jsonText = text.substr(47).slice(0, -2);
+    }
+    
+    const json = JSON.parse(jsonText);
+    
+    if (!json.table || !json.table.rows) {
+      throw new Error("No se encontraron datos en la respuesta");
+    }
+    
+    const rows = json.table.rows.map(r => r.c ? r.c.map(c => c?.v || "") : []);
+    
+    // Guardar todos los datos en la variable global
+    currentData = rows;
+    console.log(`Total de ${currentData.length} filas cargadas`);
+    
+    // Actualizar la tabla
+    actualizarTabla();
+    
+    // Remove previous status if exists
+    const existingStatus = document.querySelector('.status-message');
+    if (existingStatus) existingStatus.remove();
+    
+  })
+  .catch(err => {
+    console.error("Error al cargar datos:", err);
+    
+    // Add error message to the page
+    const errorDiv = document.createElement("div");
+    errorDiv.style.cssText = "margin-top: 10px; padding: 10px; background: #5a2d2d; border-radius: 4px; color: #ff6b6b;";
+    errorDiv.innerHTML = `
+      <strong>❌ Error al cargar datos:</strong> ${err.message}<br>
+      <small>Verifica que la hoja de Google Sheets sea pública y revisa la consola del navegador (F12) para más detalles.</small>
+    `;
+    
+    // Remove previous status if exists
+    const existingStatus = document.querySelector('.status-message');
+    if (existingStatus) existingStatus.remove();
+    errorDiv.className = 'status-message';
+    
+    document.body.appendChild(errorDiv);
+  });
+</script>
+
+</body>
+</html>
