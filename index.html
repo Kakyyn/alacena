@@ -27,9 +27,11 @@
   :root {
     --primary-color: #2196f3;
     --primary-dark: #1976d2;
+    --primary-hover: #1976d2;
     --success-color: #4caf50;
     --warning-color: #ff9800;
     --danger-color: #f44336;
+    --error-color: #f44336;
     --bg-primary: #121212;
     --bg-secondary: #1e1e1e;
     --bg-card: #2d2d2d;
@@ -248,6 +250,152 @@
     box-shadow: none;
   }
 
+  /* Botones de cantidad +/- */
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .quantity-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1;
+  }
+
+  .quantity-btn:hover {
+    background: var(--primary-hover);
+    transform: scale(1.1);
+  }
+
+  .quantity-btn:active {
+    transform: scale(0.9);
+  }
+
+  .quantity-btn.minus {
+    background: var(--error-color);
+  }
+
+  .quantity-btn.plus {
+    background: var(--success-color);
+  }
+
+  .quantity-display {
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  /* Productos agotados */
+  .product-out-of-stock {
+    background-color: rgba(244, 67, 54, 0.1) !important;
+    border-left: 4px solid var(--error-color);
+  }
+
+  .product-out-of-stock .quantity-display {
+    color: var(--error-color);
+    font-weight: bold;
+  }
+
+  .product-out-of-stock .quantity-display::after {
+    content: " ⚠️ AGOTADO";
+    font-size: 10px;
+    display: block;
+    color: var(--error-color);
+  }
+
+  /* Sistema de Pestañas */
+  .tabs-container {
+    margin-bottom: 25px;
+  }
+
+  .tabs-nav {
+    display: flex;
+    background: var(--bg-secondary);
+    border-radius: var(--radius) var(--radius) 0 0;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+  }
+
+  .tab-button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 16px 20px;
+    color: var(--text-secondary);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tab-button:last-child {
+    border-right: none;
+  }
+
+  .tab-button:hover {
+    background: rgba(33, 150, 243, 0.1);
+    color: var(--primary-color);
+  }
+
+  .tab-button.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .tab-content {
+    display: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 25px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  /* Tabla de inventario optimizada para 2 columnas */
+  #tabla-inventory {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  #tabla-inventory th:nth-child(1), #tabla-inventory td:nth-child(1) {
+    width: 65%;
+    text-align: left;
+  }
+
+  #tabla-inventory th:nth-child(2), #tabla-inventory td:nth-child(2) {
+    width: 35%;
+    text-align: center;
+  }
+
+  #tabla-inventory .quantity-controls {
+    justify-content: center;
+  }
+
   /* Estilos específicos para móvil */
   @media screen and (max-width: 767px) {
     .table-container {
@@ -275,6 +423,15 @@
     th:nth-child(2), td:nth-child(2) { width: 12%; } /* Cantidad */
     th:nth-child(3), td:nth-child(3) { width: 38%; } /* Fecha */
     th:nth-child(4), td:nth-child(4) { width: 15%; } /* Acciones */
+
+    /* Tabla de inventario con solo 2 columnas */
+    #tabla-inventory th:nth-child(1), #tabla-inventory td:nth-child(1) { width: 60%; } /* Producto */
+    #tabla-inventory th:nth-child(2), #tabla-inventory td:nth-child(2) { width: 40%; } /* Stock */
+
+    /* Tabla de gestión con solo 3 columnas */
+    #tabla-manage th:nth-child(1), #tabla-manage td:nth-child(1) { width: 45%; } /* Producto */
+    #tabla-manage th:nth-child(2), #tabla-manage td:nth-child(2) { width: 30%; } /* Cantidad */
+    #tabla-manage th:nth-child(3), #tabla-manage td:nth-child(3) { width: 25%; } /* Acciones */
 
     /* Asegurar que el texto se ajuste */
     td {
@@ -376,6 +533,22 @@
       text-overflow: ellipsis;
       overflow: hidden;
     }
+
+    /* Botones de cantidad en tablet */
+    .quantity-controls {
+      gap: 6px;
+    }
+
+    .quantity-btn {
+      width: 25px;
+      height: 25px;
+      font-size: 14px;
+    }
+
+    .quantity-display {
+      font-size: 13px;
+      min-width: 50px;
+    }
   }
 
   @media (max-width: 480px) {
@@ -415,6 +588,22 @@
       overflow: hidden;
       border-radius: 4px;
     }
+
+    /* Botones de cantidad en móvil */
+    .quantity-controls {
+      gap: 4px;
+    }
+
+    .quantity-btn {
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+
+    .quantity-display {
+      font-size: 12px;
+      min-width: 40px;
+    }
   }
 
   /* Para pantallas muy pequeñas */
@@ -438,6 +627,29 @@
       padding: 3px 1px;
       font-size: 9px;
       line-height: 1.2;
+    }
+
+    /* Botones de cantidad ultra-compactos */
+    .quantity-btn {
+      width: 20px;
+      height: 20px;
+      font-size: 10px;
+    }
+
+    .quantity-display {
+      font-size: 11px;
+      min-width: 35px;
+    }
+
+    /* Pestañas en móvil */
+    .tab-button {
+      padding: 12px 8px;
+      font-size: 14px;
+      gap: 4px;
+    }
+
+    .tab-content {
+      padding: 15px;
     }
 
     /* Hacer que otras columnas se ajusten mejor */
@@ -484,47 +696,105 @@
 <div class="container">
   <header class="header">
     <h1>🍗 Inventario de la Alacena</h1>
-    
-    <div class="action-buttons">
-      <button onclick="location.reload()" class="btn btn-success">
-        <span>🔄</span> Actualizar
-      </button>
-      <button onclick="agregarItem()" class="btn btn-primary">
-        <span>➕</span> Agregar Item
-      </button>
-      <button onclick="openSheet()" class="btn btn-secondary">
-        <span>📊</span> Abrir Hoja
-      </button>
-    </div>
   </header>
 
-  <!-- Formulario para agregar/editar items -->
-  <div id="formulario" class="form-container" style="display: none;">
-    <h3 id="tituloFormulario">Agregar Nuevo Item</h3>
-    
-    <div class="form-grid">
-      <div class="form-group">
-        <label for="producto">Producto</label>
-        <input type="text" id="producto" class="form-control" placeholder="Nombre del producto" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="cantidad">Cantidad</label>
-        <input type="text" id="cantidad" class="form-control" placeholder="Ej: 2 kg, 5 unidades">
-      </div>
-      
-      <div class="form-group">
-        <label for="fecha">Fecha</label>
-        <input type="date" id="fecha" class="form-control" required>
-      </div>
-      
-      <div class="form-group form-actions">
-        <button onclick="guardarItem()" class="btn btn-success btn-sm">
-          <span>💾</span> Guardar
+  <!-- Sistema de Pestañas -->
+  <div class="tabs-container">
+    <div class="tabs-nav">
+      <button class="tab-button active" onclick="switchTab('inventory')" id="tab-inventory">
+        <span>📦</span> Mi Inventario
+      </button>
+      <button class="tab-button" onclick="switchTab('manage')" id="tab-manage">
+        <span>⚙️</span> Gestionar Productos
+      </button>
+    </div>
+
+    <!-- Pestaña 1: Inventario Principal -->
+    <div id="tab-content-inventory" class="tab-content active">
+      <div class="inventory-header" style="text-align: center; margin-bottom: 20px;">
+        <h3 style="color: var(--primary-color); margin-bottom: 10px;">📦 ¿Qué hay en tu alacena?</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">
+          Vista rápida de tu inventario - Usa +/- para actualizar cantidades
+        </p>
+        <button onclick="location.reload()" class="btn btn-success btn-sm" style="margin-top: 10px;">
+          <span>🔄</span> Actualizar
         </button>
-        <button onclick="cancelarEdicion()" class="btn btn-secondary btn-sm">
-          <span>❌</span> Cancelar
-        </button>
+      </div>
+
+      <!-- Tabla de inventario simplificada -->
+      <div class="table-container">
+        <div class="table-responsive">
+          <table id="tabla-inventory">
+            <thead>
+              <tr>
+                <th id="header-producto-inv">Producto</th>
+                <th id="header-cantidad-inv">Stock (+/-)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestaña 2: Gestión de Productos -->
+    <div id="tab-content-manage" class="tab-content">
+      <div class="manage-header" style="text-align: center; margin-bottom: 20px;">
+        <h3 style="color: var(--primary-color); margin-bottom: 10px;">⚙️ Gestión de Productos</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">
+          Agregar nuevos productos, editar información o eliminar productos
+        </p>
+        <div class="action-buttons" style="margin-top: 15px;">
+          <button onclick="agregarItem()" class="btn btn-primary">
+            <span>➕</span> Nuevo Producto
+          </button>
+          <button onclick="openSheet()" class="btn btn-secondary">
+            <span>📊</span> Ver en Google Sheets
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario para agregar/editar items -->
+      <div id="formulario" class="form-container" style="display: none;">
+        <h3 id="tituloFormulario">Agregar Nuevo Item</h3>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="producto">Producto</label>
+            <input type="text" id="producto" class="form-control" placeholder="Nombre del producto" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="text" id="cantidad" class="form-control" placeholder="Ej: 2 kg, 5 unidades">
+          </div>
+          
+          <div class="form-group form-actions">
+            <button onclick="guardarItem()" class="btn btn-success btn-sm">
+              <span>💾</span> Guardar
+            </button>
+            <button onclick="cancelarEdicion()" class="btn btn-secondary btn-sm">
+              <span>❌</span> Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de gestión completa -->
+      <div class="table-container" style="margin-top: 30px;">
+        <h4 style="color: var(--primary-color); margin-bottom: 15px;">📋 Todos los Productos</h4>
+        <div class="table-responsive">
+          <table id="tabla-manage">
+            <thead>
+              <tr>
+                <th id="header-producto">Producto</th>
+                <th id="header-cantidad">Cantidad</th>
+                <th id="header-acciones">Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -535,22 +805,8 @@
     <input type="hidden" name="data" id="hiddenData">
   </form>
 
-  <!-- Tabla de inventario -->
-  <div class="table-container">
-    <div class="table-responsive">
-      <table id="tabla">
-        <thead>
-          <tr>
-            <th id="header-producto">Producto</th>
-            <th id="header-cantidad">Cantidad</th>
-            <th id="header-fecha">Última actualización</th>
-            <th id="header-acciones">Acciones</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
+  <!-- Mensajes de estado (globales) -->
+  <div id="mensaje" class="status-message" style="display: none;"></div>
 </div>
 
 <script>
@@ -558,7 +814,7 @@ const SHEET_ID = "1j8BgC-KV_lQPovKuzfn76QDmJyUd1Pz952E1u93eHV8";
 const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
 // REEMPLAZA ESTA URL CON LA URL DE TU GOOGLE APPS SCRIPT DESPLEGADO
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybILyTFjEc99lHfjpZTRikfteWXstErIxeJpohj3xlzIzyqCmWp9LnT8nyKNXFLJKGdA/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2RrbPTXoQ-tNqkRhhPUYSmwbToS72NTezhGVO-Am8DuAjWW-ntruVjaQK-R8_dgeU5g/exec";
 
 // Registrar Service Worker para PWA
 if ('serviceWorker' in navigator) {
@@ -602,29 +858,427 @@ window.addEventListener('appinstalled', function(event) {
   window.deferredPrompt = null;
 });
 
+// Variables globales
+let currentData = []; // Almacenar los datos actuales
+let editingIndex = -1; // Índice del item que se está editando (-1 = agregar nuevo)
+let syncQueue = []; // Cola de cambios pendientes de sincronización
+let syncTimer = null; // Timer para sincronización automática
+let isSyncing = false; // Flag para evitar sincronizaciones simultáneas
+
+// Función para cambiar entre pestañas
+function switchTab(tabName) {
+  // Remover clase active de todos los botones y contenidos
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+  
+  // Agregar clase active al botón y contenido seleccionado
+  const tabButton = document.getElementById(`tab-${tabName}`);
+  const tabContent = document.getElementById(`tab-content-${tabName}`);
+  
+  if (tabButton) tabButton.classList.add('active');
+  if (tabContent) tabContent.classList.add('active');
+  
+  // Actualizar headers responsivos según la pestaña
+  updateTableHeaders();
+  
+  // Si cambiamos a gestión, cargar datos en esa tabla también
+  if (tabName === 'manage') {
+    cargarDatosGestion();
+  }
+}
+
+// Función para cargar datos en la tabla de gestión
+function cargarDatosGestion() {
+  // Esta función simplemente llama a construir la tabla de gestión
+  // con los datos actuales que ya tenemos cargados
+  if (currentData && currentData.length > 0) {
+    construirTablaGestion();
+  }
+}
+
 // Función para actualizar headers según el tamaño de pantalla
 function updateTableHeaders() {
   const isMobile = window.innerWidth <= 767;
   
-  if (isMobile) {
-    document.getElementById('header-producto').textContent = 'Producto';
-    document.getElementById('header-cantidad').textContent = 'Cant.';
-    document.getElementById('header-fecha').textContent = 'Fecha';
-    document.getElementById('header-acciones').textContent = 'Acción';
-  } else {
-    document.getElementById('header-producto').textContent = 'Producto';
-    document.getElementById('header-cantidad').textContent = 'Cantidad';
-    document.getElementById('header-fecha').textContent = 'Última actualización';
-    document.getElementById('header-acciones').textContent = 'Acciones';
+  // Headers para tabla de inventario (pestaña principal) - Solo 2 columnas
+  const inventoryHeaders = {
+    mobile: {
+      'header-producto-inv': 'Producto',
+      'header-cantidad-inv': 'Stock'
+    },
+    desktop: {
+      'header-producto-inv': 'Producto',
+      'header-cantidad-inv': 'Stock (+/-)'
+    }
+  };
+
+  // Headers para tabla de gestión (pestaña de gestión) - Solo 3 columnas
+  const manageHeaders = {
+    mobile: {
+      'header-producto': 'Producto',
+      'header-cantidad': 'Cant.',
+      'header-acciones': 'Acción'
+    },
+    desktop: {
+      'header-producto': 'Producto',
+      'header-cantidad': 'Cantidad',
+      'header-acciones': 'Acciones'
+    }
+  };
+
+  const currentHeaders = isMobile ? 
+    { ...inventoryHeaders.mobile, ...manageHeaders.mobile } : 
+    { ...inventoryHeaders.desktop, ...manageHeaders.desktop };
+
+  // Actualizar todos los headers que existan (con verificación null)
+  Object.keys(currentHeaders).forEach(headerId => {
+    const headerElement = document.getElementById(headerId);
+    if (headerElement && headerElement !== null) {
+      headerElement.textContent = currentHeaders[headerId];
+    }
+  });
+}
+
+// Llamar la función al cargar y al redimensionar (después de que las funciones estén definidas)
+window.addEventListener('load', function() {
+  if (typeof updateTableHeaders === 'function') {
+    updateTableHeaders();
+  }
+});
+window.addEventListener('resize', function() {
+  if (typeof updateTableHeaders === 'function') {
+    updateTableHeaders();
+  }
+});
+
+// Función para verificar si una cantidad es cero
+function isQuantityZero(cantidad) {
+  if (!cantidad) return true;
+  
+  // Extraer números de la cadena
+  const numbers = cantidad.toString().match(/\d+/g);
+  if (!numbers) return true;
+  
+  // Verificar si todos los números son 0
+  return numbers.every(num => parseInt(num) === 0);
+}
+
+// Función para crear controles de cantidad (+/-)
+function createQuantityControls(cantidad, rowIndex) {
+  return `
+    <div class="quantity-controls">
+      <button class="quantity-btn minus" onclick="changeQuantity(${rowIndex}, -1)" title="Disminuir cantidad">
+        −
+      </button>
+      <span class="quantity-display">${cantidad || "0"}</span>
+      <button class="quantity-btn plus" onclick="changeQuantity(${rowIndex}, 1)" title="Aumentar cantidad">
+        +
+      </button>
+    </div>
+  `;
+}
+
+// Función para extraer el número principal de una cantidad
+function extractMainNumber(cantidad) {
+  if (!cantidad) return 0;
+  const match = cantidad.toString().match(/(\d+)/);
+  return match ? parseInt(match[1]) : 0;
+}
+
+// Función para extraer la unidad de una cantidad
+function extractUnit(cantidad) {
+  if (!cantidad) return "";
+  const match = cantidad.toString().match(/\d+\s*(.+)/);
+  return match ? match[1].trim() : "";
+}
+
+// Función para cambiar cantidad (+1 o -1)
+function changeQuantity(rowIndex, change) {
+  const row = currentData[rowIndex];
+  if (!row) return;
+  
+  const currentQuantity = row[1] || "0";
+  const currentNumber = extractMainNumber(currentQuantity);
+  const unit = extractUnit(currentQuantity);
+  
+  const newNumber = Math.max(0, currentNumber + change); // No permitir números negativos
+  const newQuantity = newNumber + (unit ? " " + unit : "");
+  
+  // Actualizar en el array local INMEDIATAMENTE
+  currentData[rowIndex][1] = newQuantity;
+  
+  // Actualizar la interfaz INMEDIATAMENTE sin esperar
+  updateQuantityDisplay(rowIndex, newQuantity);
+  
+  // SYNC DIRECTO: Actualizar Google Sheets inmediatamente pero sin bloquear la UI
+  updateQuantityInSheetsAsync(row[0], newQuantity);
+  
+  // Mostrar mensaje de sincronización
+  mostrarMensaje('⚡ Sincronizando con Google Sheets...', 'loading');
+}
+
+// Función para actualizar cantidad en Google Sheets (versión async simplificada)
+function updateQuantityInSheetsAsync(productName, newQuantity) {
+  // Verificar que Apps Script esté configurado
+  if (APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL_AQUI") {
+    mostrarMensaje('⚠️ Apps Script no configurado - cambio solo local', 'error');
+    return;
+  }
+  
+  // Asegurar que el iframe existe
+  let iframe = document.getElementById('hiddenFrame');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'hiddenFrame';
+    iframe.name = 'hiddenFrame';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+  
+  // Crear formulario para envío
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = APPS_SCRIPT_URL;
+  form.target = 'hiddenFrame';
+  form.style.display = 'none';
+  
+  // Crear datos del formulario
+  const data = {
+    action: 'updateQuantity',
+    producto: productName,
+    cantidad: newQuantity
+  };
+  
+  // Agregar un campo 'data' con JSON como string
+  const dataInput = document.createElement('input');
+  dataInput.type = 'hidden';
+  dataInput.name = 'data';
+  dataInput.value = JSON.stringify(data);
+  form.appendChild(dataInput);
+  
+  // Configurar respuesta del iframe
+  iframe.onload = function() {
+    try {
+      // Intentar leer la respuesta del iframe (si es posible)
+      const response = iframe.contentDocument || iframe.contentWindow.document;
+      mostrarMensaje(`✅ "${productName}" actualizado en Google Sheets`, 'success');
+    } catch (e) {
+      // Si no podemos leer la respuesta (por CORS), asumir éxito
+      mostrarMensaje(`✅ "${productName}" sincronizado`, 'success');
+    }
+    
+    // Limpiar después de un momento
+    setTimeout(() => {
+      if (form.parentNode) {
+        form.parentNode.removeChild(form);
+      }
+    }, 2000);
+  };
+  
+  // Manejar errores
+  iframe.onerror = function(error) {
+    mostrarMensaje('❌ Error al sincronizar con Google Sheets', 'error');
+  };
+  
+  // Enviar formulario
+  document.body.appendChild(form);
+  form.submit();
+}
+
+// Función para actualizar la interfaz inmediatamente (sin esperar a Google Sheets)
+function updateQuantityDisplay(rowIndex, newQuantity) {
+  // Actualizar en tabla de inventario
+  const inventoryRows = document.querySelectorAll("#tabla-inventory tbody tr");
+  
+  if (inventoryRows[rowIndex]) {
+    const quantityCell = inventoryRows[rowIndex].querySelector('.quantity-display');
+    
+    if (quantityCell) {
+      quantityCell.textContent = newQuantity || "0";
+      
+      // Actualizar clases de producto agotado
+      const isOutOfStock = (typeof isQuantityZero === 'function') ? isQuantityZero(newQuantity) : false;
+      if (isOutOfStock) {
+        inventoryRows[rowIndex].classList.add('product-out-of-stock');
+      } else {
+        inventoryRows[rowIndex].classList.remove('product-out-of-stock');
+      }
+    }
+  }
+  
+  // Actualizar en tabla de gestión también
+  const manageRows = document.querySelectorAll("#tabla-manage tbody tr");
+  
+  if (manageRows[rowIndex]) {
+    const quantityCell = manageRows[rowIndex].cells[1];
+    if (quantityCell) {
+      quantityCell.textContent = newQuantity || "0";
+      
+      // Actualizar clases de producto agotado
+      const isOutOfStock = (typeof isQuantityZero === 'function') ? isQuantityZero(newQuantity) : false;
+      if (isOutOfStock) {
+        manageRows[rowIndex].classList.add('product-out-of-stock');
+      } else {
+        manageRows[rowIndex].classList.remove('product-out-of-stock');
+      }
+    }
   }
 }
 
-// Llamar la función al cargar y al redimensionar
-window.addEventListener('load', updateTableHeaders);
-window.addEventListener('resize', updateTableHeaders);
+// Función para agregar cambios a la cola de sincronización
+function addToSyncQueue(productName, newValue, type = 'quantity') {
+  // Buscar si ya existe un cambio pendiente para este producto
+  const existingIndex = syncQueue.findIndex(item => item.productName === productName && item.type === type);
+  
+  if (existingIndex !== -1) {
+    // Actualizar el valor existente
+    syncQueue[existingIndex].newValue = newValue;
+    syncQueue[existingIndex].timestamp = Date.now();
+  } else {
+    // Agregar nuevo cambio
+    syncQueue.push({
+      productName,
+      newValue,
+      type,
+      timestamp: Date.now()
+    });
+  }
+  
+  // Programar sincronización automática (debounced)
+  scheduleSync();
+}
 
-let currentData = []; // Almacenar los datos actuales
-let editingIndex = -1; // Índice del item que se está editando (-1 = agregar nuevo)
+// Función para programar sincronización automática
+function scheduleSync() {
+  if (syncTimer) {
+    clearTimeout(syncTimer);
+  }
+  
+  // Sincronizar después de 3 segundos de inactividad
+  syncTimer = setTimeout(() => {
+    processSyncQueue();
+  }, 3000);
+}
+
+// Función para procesar la cola de sincronización
+function processSyncQueue() {
+  if (syncQueue.length === 0 || isSyncing) {
+    return;
+  }
+  
+  isSyncing = true;
+  
+  // Clonar la cola y limpiarla
+  const changesToSync = [...syncQueue];
+  syncQueue = [];
+  
+  // Mostrar indicador de sincronización
+  showSyncIndicator(true);
+  
+  // Procesar cambios uno por uno
+  processNextChange(changesToSync, 0);
+}
+
+// Función para procesar cambios secuencialmente
+function processNextChange(changes, index) {
+  if (index >= changes.length) {
+    // Terminado
+    isSyncing = false;
+    showSyncIndicator(false);
+    return;
+  }
+  
+  const change = changes[index];
+  
+  // Crear iframe y formulario para este cambio
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.name = 'sync_iframe_' + index;
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.target = iframe.name;
+  form.method = 'POST';
+  form.action = APPS_SCRIPT_URL;
+
+  const fields = {
+    action: 'edit',
+    originalName: change.productName,
+    producto: change.productName,
+    cantidad: change.newValue
+  };
+
+  Object.keys(fields).forEach(key => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = fields[key];
+    form.appendChild(input);
+  });
+
+  // Manejar respuesta
+  iframe.onload = function() {
+    setTimeout(() => {
+      // Limpiar este cambio
+      document.body.removeChild(form);
+      document.body.removeChild(iframe);
+      
+      // Procesar siguiente cambio
+      processNextChange(changes, index + 1);
+    }, 1000);
+  };
+
+  document.body.appendChild(form);
+  form.submit();
+}
+
+// Función para mostrar/ocultar indicador de sincronización
+function showSyncIndicator(show = true) {
+  let indicator = document.getElementById('sync-indicator');
+  
+  if (show) {
+    if (!indicator) {
+      indicator = document.createElement('div');
+      indicator.id = 'sync-indicator';
+      indicator.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(33, 150, 243, 0.9);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      `;
+      indicator.innerHTML = '⚡ Sincronizando...';
+      document.body.appendChild(indicator);
+    }
+    indicator.style.display = 'flex';
+  } else {
+    if (indicator) {
+      indicator.style.display = 'none';
+    }
+  }
+}
+
+// Sincronizar al salir de la página
+window.addEventListener('beforeunload', function() {
+  if (syncQueue.length > 0) {
+    processSyncQueue();
+  }
+});
+
+// Sincronización periódica cada 30 segundos si hay cambios pendientes
+setInterval(() => {
+  if (syncQueue.length > 0 && !isSyncing) {
+    processSyncQueue();
+  }
+}, 30000);
 
 // Función para formatear fechas consistentemente
 function formatearFecha(fecha) {
@@ -738,30 +1392,45 @@ function formatearFechaParaMostrar(fecha) {
   return formatearFechaBonita(fecha);
 }
 
+// Función de test para debug de conexión
 function openSheet() {
   window.open(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`, '_blank');
 }
 
 function agregarItem() {
+  // Cambiar a la pestaña de gestión
+  switchTab('manage');
+  
   editingIndex = -1;
-  document.getElementById('tituloFormulario').textContent = 'Agregar Nuevo Item';
+  document.getElementById('tituloFormulario').textContent = 'Agregar Nuevo Producto';
   document.getElementById('producto').value = '';
   document.getElementById('cantidad').value = '';
-  document.getElementById('fecha').value = formatearFecha(); // Usar función de formateo
   document.getElementById('formulario').style.display = 'block';
+  
+  // Scroll al formulario
+  setTimeout(() => {
+    document.getElementById('formulario').scrollIntoView({ behavior: 'smooth' });
+  }, 100);
 }
 
 function editarItem(index) {
+  // Cambiar a la pestaña de gestión
+  switchTab('manage');
+  
   editingIndex = index;
   const row = currentData[index];
-  document.getElementById('tituloFormulario').textContent = 'Editar Item';
+  document.getElementById('tituloFormulario').textContent = 'Editar Producto';
   document.getElementById('producto').value = row[0] || '';
   document.getElementById('cantidad').value = row[1] || '';
-  document.getElementById('fecha').value = formatearFecha(row[2]); // Usar función de formateo
   
   // Guardar el nombre original para identificación
   document.getElementById('formulario').setAttribute('data-original-name', row[0] || '');
   document.getElementById('formulario').style.display = 'block';
+  
+  // Scroll al formulario
+  setTimeout(() => {
+    document.getElementById('formulario').scrollIntoView({ behavior: 'smooth' });
+  }, 100);
 }
 
 function cancelarEdicion() {
@@ -772,17 +1441,11 @@ function cancelarEdicion() {
 function guardarItem() {
   const producto = document.getElementById('producto').value.trim();
   const cantidad = document.getElementById('cantidad').value.trim();
-  const fechaInput = document.getElementById('fecha').value; // Ya está en formato YYYY-MM-DD
-  
-  // Convertir fecha ISO a formato español para Google Sheets
-  const fecha = formatearFechaParaMostrar(fechaInput);
   
   if (!producto) {
     mostrarMensaje('⚠️ El nombre del producto es obligatorio', 'error');
     return;
   }
-  
-  console.log('Datos a guardar:', { producto, cantidad, fecha: fecha, fechaISO: fechaInput });
   
   // Verificar si Apps Script está configurado
   if (APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL_AQUI") {
@@ -790,32 +1453,55 @@ function guardarItem() {
     return;
   }
   
-  mostrarMensaje('🔄 Guardando cambios en Google Sheets...', 'loading');
+  // Actualizar interfaz inmediatamente
+  if (editingIndex === -1) {
+    // AGREGAR nuevo item - agregar a datos locales
+    const newRow = [producto, cantidad];
+    currentData.push(newRow);
+    
+    mostrarMensaje(`✅ "${producto}" agregado localmente - sincronizando...`, 'success');
+  } else {
+    // EDITAR item existente - actualizar datos locales
+    currentData[editingIndex][0] = producto;
+    currentData[editingIndex][1] = cantidad;
+    
+    mostrarMensaje(`✅ "${producto}" actualizado localmente - sincronizando...`, 'success');
+  }
+  
+  // Actualizar tablas inmediatamente
+  actualizarTabla();
+  cancelarEdicion();
+  
+  // Agregar a cola de sincronización en background
+  const originalName = editingIndex !== -1 ? 
+    document.getElementById('formulario').getAttribute('data-original-name') : null;
+  
+  syncProductChange(producto, cantidad, editingIndex, originalName);
+}
+
+// Función para sincronizar cambios de productos en background
+function syncProductChange(producto, cantidad, wasEditing, originalName) {
+  mostrarMensaje('🔄 Sincronizando con Google Sheets...', 'loading');
   
   // Preparar datos
   let data;
   
-  if (editingIndex === -1) {
+  if (wasEditing === -1) {
     // AGREGAR nuevo item
     data = {
       action: 'add',
       producto: producto,
-      cantidad: cantidad,
-      fecha: fecha
+      cantidad: cantidad
     };
   } else {
-    // EDITAR item existente - usar nombre original para identificación
-    const originalName = document.getElementById('formulario').getAttribute('data-original-name');
+    // EDITAR item existente
     data = {
       action: 'edit',
       producto: producto,
       cantidad: cantidad,
-      fecha: fecha,
-      originalName: originalName // Para identificar qué fila editar
+      originalName: originalName
     };
   }
-  
-  console.log('Enviando datos via iframe:', data);
   
   // Configurar el iframe para detectar cuando termine
   const iframe = document.getElementById('hiddenFrame');
@@ -828,27 +1514,18 @@ function guardarItem() {
   
   // Manejar respuesta del iframe
   iframe.onload = function() {
-    try {
-      setTimeout(() => {
-        const message = editingIndex === -1 ? 
-          `✅ "${producto}" agregado a Google Sheets` : 
-          `✅ "${producto}" actualizado en Google Sheets`;
-        mostrarMensaje(message, 'success');
-        setTimeout(() => location.reload(), 1500);
-      }, 2000);
-    } catch (error) {
-      console.log('Iframe loaded, assuming success');
-      const message = editingIndex === -1 ? 
-        `✅ "${producto}" agregado a Google Sheets` : 
+    setTimeout(() => {
+      const message = wasEditing === -1 ? 
+        `✅ "${producto}" sincronizado con Google Sheets` : 
         `✅ "${producto}" actualizado en Google Sheets`;
       mostrarMensaje(message, 'success');
-      setTimeout(() => location.reload(), 1500);
-    }
+      
+      // NO recargar la página - los datos ya están actualizados localmente
+    }, 1500);
   };
   
   // Enviar formulario
   form.submit();
-  cancelarEdicion();
 }
 
 function eliminarItem(index) {
@@ -863,22 +1540,29 @@ function eliminarItem(index) {
     return;
   }
   
-  mostrarMensaje('🔄 Eliminando item de Google Sheets...', 'loading');
+  const productName = row[0];
   
-  // CORRIGIENDO EL PROBLEMA: Usar número de fila real de Google Sheets
-  // En Google Sheets, las filas empiezan en 1, no en 0
-  // Y necesitamos el número de fila actual, no el índice original
-  const googleSheetsRowNumber = index + 1;
+  // Eliminar de datos locales inmediatamente
+  currentData.splice(index, 1);
+  
+  // Actualizar interfaz inmediatamente
+  actualizarTabla();
+  mostrarMensaje(`✅ "${productName}" eliminado localmente - sincronizando...`, 'success');
+  
+  // Sincronizar eliminación en background
+  syncProductDeletion(productName, index);
+}
+
+// Función para sincronizar eliminación en background
+function syncProductDeletion(productName, originalIndex) {
+  mostrarMensaje('🔄 Eliminando de Google Sheets...', 'loading');
   
   const data = {
     action: 'delete',
-    rowIndex: index, // Mantenemos el índice original para referencia
-    googleRowNumber: googleSheetsRowNumber, // Agregamos el número real de fila
-    itemName: row[0] // Agregamos el nombre para verificación
+    rowIndex: originalIndex,
+    googleRowNumber: originalIndex + 1,
+    itemName: productName
   };
-  
-  console.log('Eliminando via iframe:', data);
-  console.log(`Eliminando índice ${index} que corresponde a la fila ${googleSheetsRowNumber} en Google Sheets`);
   
   // Configurar el iframe para detectar cuando termine
   const iframe = document.getElementById('hiddenFrame');
@@ -891,16 +1575,10 @@ function eliminarItem(index) {
   
   // Manejar respuesta del iframe
   iframe.onload = function() {
-    try {
-      setTimeout(() => {
-        mostrarMensaje(`✅ "${row[0]}" eliminado de Google Sheets`, 'success');
-        setTimeout(() => location.reload(), 1500);
-      }, 2000);
-    } catch (error) {
-      console.log('Iframe loaded, assuming success');
-      mostrarMensaje(`✅ "${row[0]}" eliminado de Google Sheets`, 'success');
-      setTimeout(() => location.reload(), 1500);
-    }
+    setTimeout(() => {
+      mostrarMensaje(`✅ "${productName}" eliminado de Google Sheets`, 'success');
+      // NO recargar la página - los datos ya están actualizados localmente
+    }, 1500);
   };
   
   // Enviar formulario
@@ -944,54 +1622,125 @@ function mostrarMensaje(texto, tipo) {
 }
 
 function actualizarTabla() {
-  const tbody = document.querySelector("#tabla tbody");
-  tbody.innerHTML = "";
+  if (typeof construirTablaInventario === 'function') {
+    construirTablaInventario();
+  }
+  if (typeof construirTablaGestion === 'function') {
+    construirTablaGestion();
+  }
+}
+
+// Función para construir tabla de inventario (solo producto y stock con +/-)
+function construirTablaInventario() {
+  const tableBody = document.querySelector("#tabla-inventory tbody");
+  if (!tableBody) {
+    return;
+  }
   
+  tableBody.innerHTML = "";
+
+  if (!currentData || !Array.isArray(currentData)) {
+    return;
+  }
+
   currentData.forEach((row, index) => {
+    if (!row || !Array.isArray(row)) {
+      return;
+    }
+
     const tr = document.createElement("tr");
     tr.setAttribute('data-row-index', index);
     
-    // Agregar las 3 columnas de datos con formateo especial para la fecha
-    row.slice(0, 3).forEach((cell, cellIndex) => {
+    // Verificar si el producto está agotado
+    const cantidad = row[1] || "";
+    const isOutOfStock = (typeof isQuantityZero === 'function') ? isQuantityZero(cantidad) : false;
+    
+    if (isOutOfStock) {
+      tr.classList.add('product-out-of-stock');
+    }
+    
+    // Solo 2 columnas: Producto, Stock (+/-)
+    [0, 1].forEach((cellIndex) => {
       const td = document.createElement("td");
       
-      if (cellIndex === 2) {
-        // Es la columna de fecha (índice 2), formatearla para mostrar
-        td.textContent = formatearFechaParaMostrar(cell);
+      if (cellIndex === 1) {
+        // Columna de cantidad con controles +/-
+        if (typeof createQuantityControls === 'function') {
+          td.innerHTML = createQuantityControls(row[cellIndex] || "0", index);
+        } else {
+          td.textContent = row[cellIndex] || "0";
+        }
       } else {
-        td.textContent = cell || "";
+        // Columna de producto
+        td.textContent = row[cellIndex] || "";
       }
       
       tr.appendChild(td);
     });
     
-    // Agregar columna de acciones con nuevos estilos
-    const actionsTd = document.createElement("td");
-    actionsTd.innerHTML = `
-      <div class="table-actions">
-        <button onclick="editarItem(${index})" class="btn btn-warning btn-sm">
-          <span>✏️</span> Editar
-        </button>
-        <button onclick="eliminarItem(${index})" class="btn btn-danger btn-sm">
-          <span>🗑️</span> Borrar
-        </button>
-      </div>
-    `;
-    tr.appendChild(actionsTd);
-    
-    tbody.appendChild(tr);
+    tableBody.appendChild(tr);
   });
 }
 
-console.log("Iniciando carga de datos desde:", URL);
+// Función para construir tabla de gestión (completa con editar/borrar)
+function construirTablaGestion() {
+  const tableBody = document.querySelector("#tabla-manage tbody");
+  if (!tableBody) {
+    return;
+  }
+  
+  tableBody.innerHTML = "";
+
+  if (!currentData || !Array.isArray(currentData)) {
+    return;
+  }
+
+  currentData.forEach((row, index) => {
+    if (!row || !Array.isArray(row)) {
+      return;
+    }
+
+    const tr = document.createElement("tr");
+    tr.setAttribute('data-row-index', index);
+    
+    // Verificar si el producto está agotado
+    const cantidad = row[1] || "";
+    const isOutOfStock = (typeof isQuantityZero === 'function') ? isQuantityZero(cantidad) : false;
+    
+    if (isOutOfStock) {
+      tr.classList.add('product-out-of-stock');
+    }
+    
+    // Solo 3 columnas: Producto, Cantidad, Acciones
+    [0, 1].forEach((cellIndex) => {
+      const td = document.createElement("td");
+      td.textContent = row[cellIndex] || "";
+      tr.appendChild(td);
+    });
+    
+    // Columna de acciones (editar/borrar)
+    const actionsTd = document.createElement("td");
+    actionsTd.innerHTML = `
+      <div class="table-actions">
+        <button class="btn btn-warning btn-sm" onclick="editarItem(${index})" title="Editar producto">
+          ✏️ Editar
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="eliminarItem(${index})" title="Eliminar producto">
+          🗑️ Borrar
+        </button>
+      </div>
+    `;
+    
+    tr.appendChild(actionsTd);
+    tableBody.appendChild(tr);
+  });
+}
 
 fetch(URL)
   .then(res => {
-    console.log("Respuesta recibida, status:", res.status);
     return res.text();
   })
   .then(text => {
-    console.log("Datos cargados desde Google Sheets");
     
     // More robust JSON extraction
     let jsonText;
@@ -1013,7 +1762,6 @@ fetch(URL)
     
     // Guardar todos los datos en la variable global
     currentData = rows;
-    console.log(`Total de ${currentData.length} filas cargadas`);
     
     // Actualizar la tabla
     actualizarTabla();

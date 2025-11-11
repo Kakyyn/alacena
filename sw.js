@@ -1,5 +1,5 @@
 // Service Worker para Alacena PWA
-const CACHE_NAME = 'alacena-v1.0.0';
+const CACHE_NAME = 'alacena-v1.0.1';
 const urlsToCache = [
   './',
   './index.html',
@@ -21,6 +21,11 @@ self.addEventListener('install', function(event) {
 self.addEventListener('fetch', function(event) {
   // Solo cachear requests GET
   if (event.request.method !== 'GET') {
+    return;
+  }
+
+  // Filtrar esquemas no soportados
+  if (!event.request.url.startsWith('http') && !event.request.url.startsWith('https')) {
     return;
   }
 
@@ -59,7 +64,15 @@ self.addEventListener('fetch', function(event) {
 
             caches.open(CACHE_NAME)
               .then(function(cache) {
-                cache.put(event.request, responseToCache);
+                try {
+                  cache.put(event.request, responseToCache);
+                } catch (error) {
+                  console.log('Error al cachear:', error.message);
+                  // Ignorar errores de cache para esquemas no soportados
+                }
+              })
+              .catch(function(error) {
+                console.log('Error al abrir cache:', error.message);
               });
 
             return response;
